@@ -1,0 +1,26 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: leisurely_rabbitmq
+    ports:
+      - "5672:5672"   # AMQP protocol (Celery connects here)
+      - "15672:15672" # Management UI (http://localhost:15762)
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD","rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: leisurely_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
